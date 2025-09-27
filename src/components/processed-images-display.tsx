@@ -13,83 +13,23 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { formatBytes } from '@/lib/utils';
 import {
   Check,
   Clipboard,
-  Download,
-  Image as ImageIcon,
   Sparkles,
   Tags,
 } from 'lucide-react';
-import Image from 'next/image';
 import { useState } from 'react';
 
-interface ProcessedImagesDisplayProps {
-  processedImages: ProcessedImage[];
-}
-
+// O componente principal agora é renderizado diretamente na page.tsx,
+// então esta exportação pode ser removida se não for mais usada em outro lugar.
 export function ProcessedImagesDisplay({
   processedImages
-}: ProcessedImagesDisplayProps) {
-  return (
-      <ProcessedImagesSection images={processedImages} />
-  );
-}
-
-function ProcessedImagesSection({ images }: { images: ProcessedImage[] }) {
-  const handleDownload = (url: string, name: string) => {
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-headline">
-          <ImageIcon className="text-primary" />
-          Imagens Processadas
-        </CardTitle>
-        <CardDescription>
-          Suas imagens foram redimensionadas e estão prontas para download.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {images.map((image) => (
-          <div
-            key={image.name}
-            className="flex items-center gap-4 p-2 rounded-lg border"
-          >
-            <Image
-              src={image.url}
-              alt={image.name}
-              width={64}
-              height={64}
-              className="rounded-md object-cover aspect-square"
-            />
-            <div className="flex-1 text-sm">
-              <p className="font-medium">{image.name}</p>
-              <p className="text-muted-foreground">
-                {image.width} x {image.height} px &bull; {formatBytes(image.size)}
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handleDownload(image.url, image.name)}
-              aria-label={`Baixar ${image.name}`}
-            >
-              <Download className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
-  );
+}: {
+  processedImages: ProcessedImage[];
+}) {
+  // A lógica de exibição de imagens foi movida para page.tsx para maior controle
+  return null;
 }
 
 function AiContentSection({
