@@ -26,7 +26,7 @@ export async function processImage(
       const ctx = canvas.getContext('2d');
 
       if (!ctx) {
-        throw new Error('Could not get canvas context');
+        throw new Error('Não foi possível obter o contexto do canvas');
       }
 
       const imgAspectRatio = imageBitmap.width / imageBitmap.height;
@@ -55,7 +55,7 @@ export async function processImage(
       );
 
       if (!blob) {
-        throw new Error('Failed to create blob from canvas');
+        throw new Error('Falha ao criar blob a partir do canvas');
       }
 
       const url = URL.createObjectURL(blob);

@@ -1,10 +1,10 @@
 'use server';
 /**
- * @fileOverview Provides AI-powered marketing campaign suggestions based on a product image.
+ * @fileOverview Fornece sugestões de campanhas de marketing com IA com base na imagem de um produto.
  *
- * - suggestMarketingCampaignIdeas - A function that suggests marketing campaign ideas based on a product image.
- * - SuggestMarketingCampaignIdeasInput - The input type for the suggestMarketingCampaignIdeas function.
- * - SuggestMarketingCampaignIdeasOutput - The return type for the suggestMarketingCampaignIdeas function.
+ * - suggestMarketingCampaignIdeas - Uma função que sugere ideias de campanhas de marketing com base na imagem de um produto.
+ * - SuggestMarketingCampaignIdeasInput - O tipo de entrada para a função suggestMarketingCampaignIdeas.
+ * - SuggestMarketingCampaignIdeasOutput - O tipo de retorno para a função suggestMarketingCampaignIdeas.
  */
 
 import {ai} from '@/ai/genkit';
@@ -14,9 +14,9 @@ const SuggestMarketingCampaignIdeasInputSchema = z.object({
   productImageDataUri: z
     .string()
     .describe(
-      "A photo of a product, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+      "Uma foto de um produto, como um URI de dados que deve incluir um tipo MIME e usar codificação Base64. Formato esperado: 'data:<mimetype>;base64,<encoded_data>'."
     ),
-  productDescription: z.string().describe('The description of the product.'),
+  productDescription: z.string().describe('A descrição do produto.'),
 });
 export type SuggestMarketingCampaignIdeasInput = z.infer<
   typeof SuggestMarketingCampaignIdeasInputSchema
@@ -25,7 +25,7 @@ export type SuggestMarketingCampaignIdeasInput = z.infer<
 const SuggestMarketingCampaignIdeasOutputSchema = z.object({
   campaignIdeas: z
     .array(z.string())
-    .describe('AI-powered marketing campaign ideas for the product.'),
+    .describe('Ideias de campanhas de marketing geradas por IA para o produto.'),
 });
 export type SuggestMarketingCampaignIdeasOutput = z.infer<
   typeof SuggestMarketingCampaignIdeasOutputSchema
@@ -41,13 +41,13 @@ const prompt = ai.definePrompt({
   name: 'suggestMarketingCampaignIdeasPrompt',
   input: {schema: SuggestMarketingCampaignIdeasInputSchema},
   output: {schema: SuggestMarketingCampaignIdeasOutputSchema},
-  prompt: `You are a marketing expert. Generate creative marketing campaign ideas for the provided product.
+  prompt: `Você é um especialista em marketing. Gere ideias criativas de campanhas de marketing para o produto fornecido.
 
-Product Description: {{{productDescription}}}
-Product Image: {{media url=productImageDataUri}}
+Descrição do Produto: {{{productDescription}}}
+Imagem do Produto: {{media url=productImageDataUri}}
 
-Provide a list of marketing campaign ideas to improve product promotion. Each campaign idea should be concise and actionable.
-Campaign Ideas:`, // List of campaign ideas
+Forneça uma lista de ideias de campanhas de marketing para melhorar a promoção do produto. Cada ideia de campanha deve ser concisa e acionável.
+Ideias de Campanha:`, // Lista de ideias de campanha
 });
 
 const suggestMarketingCampaignIdeasFlow = ai.defineFlow(

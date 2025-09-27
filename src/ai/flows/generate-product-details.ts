@@ -1,11 +1,11 @@
 'use server';
 
 /**
- * @fileOverview Generates product details (title, description, SEO tags) based on an uploaded product image.
+ * @fileOverview Gera detalhes de produtos (título, descrição, tags de SEO) com base em uma imagem de produto enviada.
  *
- * - generateProductDetails - A function that handles the generation of product details.
- * - GenerateProductDetailsInput - The input type for the generateProductDetails function.
- * - GenerateProductDetailsOutput - The return type for the generateProductDetails function.
+ * - generateProductDetails - Uma função que lida com a geração de detalhes do produto.
+ * - GenerateProductDetailsInput - O tipo de entrada para a função generateProductDetails.
+ * - GenerateProductDetailsOutput - O tipo de retorno para a função generateProductDetails.
  */
 
 import {ai} from '@/ai/genkit';
@@ -15,15 +15,15 @@ const GenerateProductDetailsInputSchema = z.object({
   productPhotoDataUri: z
     .string()
     .describe(
-      "A photo of the product, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+      "Uma foto do produto, como um URI de dados que deve incluir um tipo MIME e usar codificação Base64. Formato esperado: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
 export type GenerateProductDetailsInput = z.infer<typeof GenerateProductDetailsInputSchema>;
 
 const GenerateProductDetailsOutputSchema = z.object({
-  title: z.string().describe('The title of the product.'),
-  description: z.string().describe('The description of the product.'),
-  seoTags: z.array(z.string()).describe('SEO tags for the product.'),
+  title: z.string().describe('O título do produto.'),
+  description: z.string().describe('A descrição do produto.'),
+  seoTags: z.array(z.string()).describe('Tags de SEO para o produto.'),
 });
 export type GenerateProductDetailsOutput = z.infer<typeof GenerateProductDetailsOutputSchema>;
 
@@ -37,15 +37,15 @@ const prompt = ai.definePrompt({
   name: 'generateProductDetailsPrompt',
   input: {schema: GenerateProductDetailsInputSchema},
   output: {schema: GenerateProductDetailsOutputSchema},
-  prompt: `You are an AI assistant specializing in generating e-commerce product details.
+  prompt: `Você é um assistente de IA especializado em gerar detalhes de produtos para e-commerce.
 
-  Based on the product image, generate a title, description, and SEO tags for the product.
+  Com base na imagem do produto, gere um título, uma descrição e tags de SEO para o produto.
 
-  Product Image: {{media url=productPhotoDataUri}}
+  Imagem do Produto: {{media url=productPhotoDataUri}}
 
-  Title:
-  Description:
-  SEO Tags:`,
+  Título:
+  Descrição:
+  Tags de SEO:`,
 });
 
 const generateProductDetailsFlow = ai.defineFlow(

@@ -18,10 +18,10 @@ export async function getAiGeneratedContent(
   } catch (e) {
     console.error(e);
     const errorMessage =
-      e instanceof Error ? e.message : 'An unknown error occurred.';
+      e instanceof Error ? e.message : 'Ocorreu um erro desconhecido.';
     return {
       success: false,
-      error: `Failed to generate AI content: ${errorMessage}`,
+      error: `Falha ao gerar conteúdo de IA: ${errorMessage}`,
     };
   }
 }

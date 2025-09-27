@@ -37,14 +37,14 @@ import * as z from 'zod';
 const formSchema = z.object({
   websiteWidth: z.coerce
     .number()
-    .min(50, 'Min 50px')
-    .max(4000, 'Max 4000px'),
+    .min(50, 'Mín 50px')
+    .max(4000, 'Máx 4000px'),
   websiteHeight: z.coerce
     .number()
-    .min(50, 'Min 50px')
-    .max(4000, 'Max 4000px'),
-  erpWidth: z.coerce.number().min(50, 'Min 50px').max(4000, 'Max 4000px'),
-  erpHeight: z.coerce.number().min(50, 'Min 50px').max(4000, 'Max 4000px'),
+    .min(50, 'Mín 50px')
+    .max(4000, 'Máx 4000px'),
+  erpWidth: z.coerce.number().min(50, 'Mín 50px').max(4000, 'Máx 4000px'),
+  erpHeight: z.coerce.number().min(50, 'Mín 50px').max(4000, 'Máx 4000px'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -76,8 +76,8 @@ export default function ImageEditorPage() {
         // 10MB limit
         toast({
           variant: 'destructive',
-          title: 'File too large',
-          description: 'Please upload an image smaller than 10MB.',
+          title: 'Arquivo muito grande',
+          description: 'Por favor, envie uma imagem menor que 10MB.',
         });
         return;
       }
@@ -91,8 +91,8 @@ export default function ImageEditorPage() {
     if (!file) {
       toast({
         variant: 'destructive',
-        title: 'No image selected',
-        description: 'Please upload an image to process.',
+        title: 'Nenhuma imagem selecionada',
+        description: 'Por favor, envie uma imagem para processar.',
       });
       return;
     }
@@ -102,7 +102,7 @@ export default function ImageEditorPage() {
       try {
         const dimensions: Dimension[] = [
           {
-            name: 'website',
+            name: 'site',
             width: values.websiteWidth,
             height: values.websiteHeight,
           },
@@ -120,15 +120,15 @@ export default function ImageEditorPage() {
 
         setResults({ processedImages, aiContent: aiResult.data });
         toast({
-          title: 'Success!',
-          description: 'Your images and AI content are ready.',
+          title: 'Sucesso!',
+          description: 'Suas imagens e conteúdo de IA estão prontos.',
         });
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : 'An unknown error occurred.';
+          error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
         toast({
           variant: 'destructive',
-          title: 'Processing failed',
+          title: 'Falha no processamento',
           description: errorMessage,
         });
       }
@@ -140,10 +140,10 @@ export default function ImageEditorPage() {
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8">
           <h2 className="font-headline text-4xl md:text-5xl font-bold">
-            Image & Content Toolkit
+            Kit de Ferramentas de Imagem e Conteúdo
           </h2>
           <p className="text-muted-foreground mt-2 text-lg">
-            Upload your product image, and let our AI handle the rest.
+            Envie a imagem do seu produto e deixe nossa IA cuidar do resto.
           </p>
         </div>
 
@@ -155,7 +155,7 @@ export default function ImageEditorPage() {
                 className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start"
               >
                 <div className="space-y-4">
-                  <Label htmlFor="file-upload" className="font-medium">Product Image</Label>
+                  <Label htmlFor="file-upload" className="font-medium">Imagem do Produto</Label>
                   <div className="relative border-2 border-dashed border-muted-foreground/50 rounded-lg p-6 text-center cursor-pointer hover:border-primary transition-colors">
                     <input
                       id="file-upload"
@@ -169,7 +169,7 @@ export default function ImageEditorPage() {
                       <div className="relative aspect-square max-h-[300px] mx-auto">
                         <Image
                           src={filePreview}
-                          alt="Preview"
+                          alt="Pré-visualização"
                           fill
                           className="object-contain rounded-md"
                         />
@@ -178,9 +178,9 @@ export default function ImageEditorPage() {
                       <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground">
                         <UploadCloud className="w-12 h-12" />
                         <p className="font-medium">
-                          Click or drag file to this area to upload
+                          Clique ou arraste o arquivo para esta área para enviar
                         </p>
-                        <p className="text-sm">PNG, JPG, GIF up to 10MB</p>
+                        <p className="text-sm">PNG, JPG, GIF até 10MB</p>
                       </div>
                     )}
                   </div>
@@ -188,7 +188,7 @@ export default function ImageEditorPage() {
 
                 <div className="space-y-6">
                   <div>
-                    <Label className="font-medium">Output Dimensions</Label>
+                    <Label className="font-medium">Dimensões de Saída</Label>
                     <Accordion
                       type="single"
                       collapsible
@@ -196,14 +196,14 @@ export default function ImageEditorPage() {
                       className="w-full"
                     >
                       <AccordionItem value="website">
-                        <AccordionTrigger>Website Image</AccordionTrigger>
+                        <AccordionTrigger>Imagem para o Site</AccordionTrigger>
                         <AccordionContent className="grid grid-cols-2 gap-4">
                           <FormField
                             control={form.control}
                             name="websiteWidth"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Width (px)</FormLabel>
+                                <FormLabel>Largura (px)</FormLabel>
                                 <FormControl>
                                   <Input type="number" {...field} />
                                 </FormControl>
@@ -216,7 +216,7 @@ export default function ImageEditorPage() {
                             name="websiteHeight"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Height (px)</FormLabel>
+                                <FormLabel>Altura (px)</FormLabel>
                                 <FormControl>
                                   <Input type="number" {...field} />
                                 </FormControl>
@@ -227,14 +227,14 @@ export default function ImageEditorPage() {
                         </AccordionContent>
                       </AccordionItem>
                       <AccordionItem value="erp">
-                        <AccordionTrigger>ERP Image</AccordionTrigger>
+                        <AccordionTrigger>Imagem para o ERP</AccordionTrigger>
                         <AccordionContent className="grid grid-cols-2 gap-4">
                           <FormField
                             control={form.control}
                             name="erpWidth"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Width (px)</FormLabel>
+                                <FormLabel>Largura (px)</FormLabel>
                                 <FormControl>
                                   <Input type="number" {...field} />
                                 </FormControl>
@@ -247,7 +247,7 @@ export default function ImageEditorPage() {
                             name="erpHeight"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Height (px)</FormLabel>
+                                <FormLabel>Altura (px)</FormLabel>
                                 <FormControl>
                                   <Input type="number" {...field} />
                                 </FormControl>
@@ -271,7 +271,7 @@ export default function ImageEditorPage() {
                     ) : (
                       <Sparkles className="mr-2 h-5 w-5" />
                     )}
-                    {isProcessing ? 'Processing...' : 'Generate with AI'}
+                    {isProcessing ? 'Processando...' : 'Gerar com IA'}
                   </Button>
                 </div>
               </form>
@@ -283,7 +283,7 @@ export default function ImageEditorPage() {
           <div className="text-center py-10">
             <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
             <p className="mt-4 text-muted-foreground">
-              AI is working its magic... please wait.
+              A IA está fazendo sua mágica... por favor, aguarde.
             </p>
           </div>
         )}
