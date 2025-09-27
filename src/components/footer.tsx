@@ -2,7 +2,7 @@ import { Gem } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="border-t">
+    <footer className="border-t border-border/50 bg-transparent backdrop-blur-sm">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-center">
           <p className="text-sm text-muted-foreground flex items-center gap-2">

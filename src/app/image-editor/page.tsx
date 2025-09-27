@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -28,20 +27,18 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ArrowLeft,
-  Camera,
   Download,
   ImageIcon,
   Loader2,
+  Scan,
   Sparkles,
-  UploadCloud,
   X,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { formatBytes } from '@/lib/utils';
-
+import { FotixLogo } from '@/components/fotix-logo';
 
 const formSchema = z.object({
   productDescription: z.string().optional(),
@@ -284,7 +281,7 @@ export default function ImageEditorPage() {
                     if (!siteImage || !erpImage) return null;
                     
                     return (
-                        <Card key={index} className="overflow-hidden">
+                        <Card key={index} className="overflow-hidden bg-card/50 backdrop-blur-sm">
                            <CardContent className="p-4">
                                 <p className='text-sm font-medium text-muted-foreground mb-4'>{result.originalFileName}</p>
                                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
@@ -345,7 +342,7 @@ export default function ImageEditorPage() {
            {/* Coluna da Direita - IA e Favoritos */}
            <div className="space-y-8">
                 {/* Seção de IA */}
-                <Card>
+                <Card className="bg-card/50 backdrop-blur-sm">
                     <CardHeader>
                          <CardTitle className="flex items-center gap-2 font-headline">
                             <Sparkles className="text-primary" />
@@ -363,7 +360,7 @@ export default function ImageEditorPage() {
                                         <FormControl>
                                         <Textarea
                                             placeholder="Descreva a peça para refinar os resultados da IA (Ex: Camiseta de algodão com estampa de folhagem...)"
-                                            className="resize-none min-h-[120px]"
+                                            className="resize-none min-h-[120px] bg-input/80"
                                             {...field}
                                         />
                                         </FormControl>
@@ -402,10 +399,10 @@ export default function ImageEditorPage() {
     <div className="flex-1 flex flex-col justify-center items-center p-4" onPaste={handlePaste}>
       <div className="w-full max-w-2xl mx-auto text-center">
         <div className="flex items-center justify-center gap-3 mb-4">
-            <Camera className="h-10 w-10 text-primary" />
-             <h1 className="font-headline text-5xl font-semibold text-foreground">
-              Fotix
-            </h1>
+          <FotixLogo className="h-12 w-12" />
+          <h1 className="font-headline text-5xl font-semibold text-foreground">
+            Fotix
+          </h1>
         </div>
         <p className="text-muted-foreground text-lg mb-8">
             Crie conteúdo de alta qualidade para o seu e-commerce com o poder da IA.
@@ -413,7 +410,13 @@ export default function ImageEditorPage() {
 
         <div className="space-y-8">
             <div className="space-y-4">
-            <div className="relative border-2 border-dashed border-muted-foreground/30 rounded-lg p-10 text-center cursor-pointer hover:border-primary transition-colors bg-input/20">
+            <div 
+              style={{
+                  background: 'linear-gradient(145deg, rgba(160, 120, 240, 0.1), rgba(120, 180, 250, 0.1))',
+                  boxShadow: '0 0 0 1px rgba(160, 120, 240, 0.3), 0 0 20px -5px rgba(160, 120, 240, 0.3)'
+              }}
+              className="relative border-2 border-dashed border-primary/30 rounded-lg p-10 text-center cursor-pointer hover:border-primary transition-colors bg-accent/20 backdrop-blur-sm"
+            >
                 <input
                 id="file-upload"
                 type="file"
@@ -446,8 +449,8 @@ export default function ImageEditorPage() {
                 </div>
                 ) : (
                 <div className="flex flex-col items-center justify-center space-y-4 text-muted-foreground">
-                    <div className="p-3 rounded-full bg-primary/10 text-primary">
-                    <UploadCloud className="w-10 h-10" />
+                    <div className="p-3 rounded-full bg-primary/10 text-primary border border-primary/20">
+                    <Scan className="w-10 h-10" />
                     </div>
                     <div>
                         <p className="font-medium">

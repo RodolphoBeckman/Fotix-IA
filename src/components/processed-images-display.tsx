@@ -38,7 +38,7 @@ function AiContentSection({
   content: GenerateProductDetailsOutput;
 }) {
   return (
-    <Card>
+    <Card className='bg-card/50 backdrop-blur-sm'>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 font-headline">
           <Sparkles className="text-primary" />
