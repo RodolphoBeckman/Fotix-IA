@@ -33,7 +33,6 @@ import {
   ImageIcon,
   Loader2,
   Sparkles,
-  Star,
   UploadCloud,
   X,
 } from 'lucide-react';
@@ -66,7 +65,6 @@ export default function ImageEditorPage() {
   const [results, setResults] = useState<Result[] | null>(null);
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
   const [aiContent, setAiContent] = useState<GenerateProductDetailsOutput | null>(null);
-  const [favoritedImages, setFavoritedImages] = useState<ProcessedImage[]>([]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -172,7 +170,7 @@ export default function ImageEditorPage() {
         setResults(resultsArray);
         toast({
           title: 'Imagens Processadas!',
-          description: 'Agora você pode gerar o conteúdo de IA e favoritar suas imagens.',
+          description: 'Agora você pode gerar o conteúdo de IA e baixar suas imagens.',
         });
 
       } catch (error) {
@@ -225,17 +223,6 @@ export default function ImageEditorPage() {
     }
   };
 
-  const handleToggleFavorite = (erpImage: ProcessedImage) => {
-    setFavoritedImages(prev => {
-      const isFavorited = prev.some(fav => fav.name === erpImage.name);
-      if (isFavorited) {
-        return prev.filter(fav => fav.name !== erpImage.name);
-      } else {
-        return [...prev, erpImage];
-      }
-    });
-  };
-
   const handleDownloadImage = (url: string, name: string) => {
     const a = document.createElement('a');
     a.href = url;
@@ -244,23 +231,42 @@ export default function ImageEditorPage() {
     a.click();
     document.body.removeChild(a);
   };
+  
+  const handleDownloadAll = () => {
+    if (!results) return;
+
+    results.forEach(result => {
+        result.processedImages.forEach(image => {
+            handleDownloadImage(image.url, image.name);
+        });
+    });
+
+    toast({
+        title: 'Download Iniciado',
+        description: 'Todas as imagens processadas estão sendo baixadas.',
+    });
+  };
+
 
   const handleReset = () => {
     setFiles([]);
     setFilePreviews([]);
     setResults(null);
     setAiContent(null);
-    setFavoritedImages([]);
     form.reset();
   };
 
   if (results) {
     return (
        <div className="container mx-auto px-4 py-8">
-         <div className='flex items-center mb-6'>
+         <div className='flex items-center justify-between mb-6'>
             <Button variant="outline" onClick={handleReset}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Gerar Novas Imagens
+            </Button>
+            <Button onClick={handleDownloadAll}>
+                <Download className="mr-2 h-4 w-4" />
+                Baixar Todas
             </Button>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -268,47 +274,68 @@ export default function ImageEditorPage() {
            <div className="space-y-4">
               <h2 className="text-2xl font-headline flex items-center gap-2">
                 <ImageIcon className="text-primary" />
-                Galeria de Imagens (Site)
+                Galeria de Imagens
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {results.map(result => {
+              <div className="space-y-6">
+                {results.map((result, index) => {
                     const siteImage = result.processedImages.find(img => img.name.includes('1300x2000'));
                     const erpImage = result.processedImages.find(img => img.name.includes('500x500'));
 
                     if (!siteImage || !erpImage) return null;
                     
-                    const isFavorited = favoritedImages.some(fav => fav.name === erpImage.name);
-
                     return (
-                        <Card key={siteImage.name} className="overflow-hidden group">
-                           <div className="relative aspect-[13/20]">
-                                <Image
-                                    src={siteImage.url}
-                                    alt={siteImage.name}
-                                    fill
-                                    className="object-cover"
-                                />
-                                <div className="absolute top-2 right-2 flex flex-col gap-2">
-                                     <Button
-                                        size="icon"
-                                        variant="outline"
-                                        className={`bg-background/80 hover:bg-background ${isFavorited ? 'text-yellow-400' : 'text-foreground'}`}
-                                        onClick={() => handleToggleFavorite(erpImage)}
-                                        aria-label="Favoritar"
-                                    >
-                                       <Star className={`h-5 w-5 ${isFavorited ? 'fill-current' : ''}`} />
-                                    </Button>
-                                    <Button
-                                        size="icon"
-                                        variant="outline"
-                                        className="bg-background/80 hover:bg-background"
-                                        onClick={() => handleDownloadImage(siteImage.url, siteImage.name)}
-                                        aria-label="Download"
-                                    >
-                                        <Download className="h-5 w-5" />
-                                    </Button>
+                        <Card key={index} className="overflow-hidden">
+                           <CardContent className="p-4">
+                                <p className='text-sm font-medium text-muted-foreground mb-4'>{result.originalFileName}</p>
+                                <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                                    {/* Imagem do Site */}
+                                    <div className="relative group aspect-[13/20]">
+                                        <Image
+                                            src={siteImage.url}
+                                            alt={siteImage.name}
+                                            fill
+                                            className="object-cover rounded-md"
+                                        />
+                                        <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <Button
+                                                size="icon"
+                                                variant="outline"
+                                                className="bg-background/80 hover:bg-background"
+                                                onClick={() => handleDownloadImage(siteImage.url, siteImage.name)}
+                                                aria-label="Download Imagem do Site"
+                                            >
+                                                <Download className="h-5 w-5" />
+                                            </Button>
+                                        </div>
+                                         <div className="absolute bottom-2 left-2 bg-background/80 text-foreground text-xs px-2 py-1 rounded-full">
+                                            {siteImage.width}x{siteImage.height} (Site)
+                                        </div>
+                                    </div>
+                                     {/* Imagem ERP */}
+                                     <div className="relative group aspect-square">
+                                        <Image
+                                            src={erpImage.url}
+                                            alt={erpImage.name}
+                                            fill
+                                            className="object-cover rounded-md"
+                                        />
+                                        <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <Button
+                                                size="icon"
+                                                variant="outline"
+                                                className="bg-background/80 hover:bg-background"
+                                                onClick={() => handleDownloadImage(erpImage.url, erpImage.name)}
+                                                aria-label="Download Imagem ERP"
+                                            >
+                                                <Download className="h-5 w-5" />
+                                            </Button>
+                                        </div>
+                                         <div className="absolute bottom-2 left-2 bg-background/80 text-foreground text-xs px-2 py-1 rounded-full">
+                                            {erpImage.width}x{erpImage.height} (ERP)
+                                        </div>
+                                    </div>
                                 </div>
-                           </div>
+                           </CardContent>
                         </Card>
                     );
                 })}
@@ -360,48 +387,6 @@ export default function ImageEditorPage() {
                         </Form>
                     </CardContent>
                 </Card>
-
-                {/* Seção de Favoritos (ERP) */}
-                {favoritedImages.length > 0 && (
-                    <Card>
-                         <CardHeader>
-                             <CardTitle className="flex items-center gap-2 font-headline">
-                                <Star className="text-primary" />
-                                Imagens Favoritas (ERP)
-                             </CardTitle>
-                             <CardDescription>
-                                Imagens selecionadas para o sistema ERP.
-                             </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                             {favoritedImages.map(image => (
-                                <div key={image.name} className="flex items-center gap-4 p-2 rounded-lg border">
-                                    <Image
-                                        src={image.url}
-                                        alt={image.name}
-                                        width={64}
-                                        height={64}
-                                        className="rounded-md object-cover aspect-square"
-                                    />
-                                    <div className="flex-1 text-sm">
-                                        <p className="font-medium">{image.name}</p>
-                                        <p className="text-muted-foreground">
-                                            {image.width} x {image.height} px &bull; {formatBytes(image.size)}
-                                        </p>
-                                    </div>
-                                    <Button
-                                        variant="outline"
-                                        size="icon"
-                                        onClick={() => handleDownloadImage(image.url, image.name)}
-                                        aria-label={`Baixar ${image.name}`}
-                                    >
-                                        <Download className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                             ))}
-                        </CardContent>
-                    </Card>
-                )}
 
                 {/* Seção de Conteúdo Gerado */}
                 {aiContent && (
