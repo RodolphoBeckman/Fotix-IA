@@ -6,13 +6,15 @@ import {
 } from '@/ai/flows/generate-product-details';
 
 export async function getAiGeneratedContent(
-  imageDataUri: string
+  imageDataUri: string,
+  productDescription?: string
 ): Promise<
   { success: true; data: GenerateProductDetailsOutput } | { success: false; error: string }
 > {
   try {
     const result = await generateProductDetails({
       productPhotoDataUri: imageDataUri,
+      productDescription: productDescription,
     });
     return { success: true, data: result };
   } catch (e) {

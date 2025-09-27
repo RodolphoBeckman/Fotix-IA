@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview Gera detalhes de produtos (título, descrição, tags de SEO) com base em uma imagem de produto enviada.
+ * @fileOverview Gera detalhes de produtos (título, descrição, tags de SEO) com base em uma imagem de produto enviada e uma descrição opcional.
  *
  * - generateProductDetails - Uma função que lida com a geração de detalhes do produto.
  * - GenerateProductDetailsInput - O tipo de entrada para a função generateProductDetails.
@@ -17,6 +17,10 @@ const GenerateProductDetailsInputSchema = z.object({
     .describe(
       "Uma foto do produto, como um URI de dados que deve incluir um tipo MIME e usar codificação Base64. Formato esperado: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  productDescription: z
+    .string()
+    .optional()
+    .describe('Uma descrição textual opcional da peça de roupa.'),
 });
 export type GenerateProductDetailsInput = z.infer<typeof GenerateProductDetailsInputSchema>;
 
@@ -37,16 +41,23 @@ const prompt = ai.definePrompt({
   name: 'generateProductDetailsPrompt',
   input: {schema: GenerateProductDetailsInputSchema},
   output: {schema: GenerateProductDetailsOutputSchema},
-  prompt: `Você é um assistente de IA especializado em gerar detalhes de produtos para e-commerce.
+  prompt: `Você é um assistente de IA especialista em criar conteúdo para e-commerce de moda.
 
-  Com base na imagem do produto, gere um título, uma descrição e tags de SEO para o produto.
+Com base na imagem do produto e na descrição fornecida, gere um título, uma descrição de marketing atraente e uma lista de tags de SEO.
 
-  Imagem do Produto: {{media url=productPhotoDataUri}}
+Se uma descrição for fornecida, use-a como a principal fonte de verdade. A imagem deve servir como contexto visual.
 
-  Título:
-  Descrição:
-  Tags de SEO:`,
+Imagem do Produto: {{media url=productPhotoDataUri}}
+{{#if productDescription}}
+Descrição Fornecida: {{{productDescription}}}
+{{/if}}
+
+Gere o conteúdo no seguinte formato:
+Título:
+Descrição:
+Tags de SEO:`,
 });
+
 
 const generateProductDetailsFlow = ai.defineFlow(
   {

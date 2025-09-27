@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { fileToDataURI, getAiGeneratedContent } from '@/lib/actions';
 import {
@@ -35,6 +36,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const formSchema = z.object({
+  productDescription: z.string().optional(),
   websiteWidth: z.coerce
     .number()
     .min(50, 'Mín 50px')
@@ -62,6 +64,7 @@ export default function ImageEditorPage() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      productDescription: '',
       websiteWidth: 1080,
       websiteHeight: 1080,
       erpWidth: 400,
@@ -111,7 +114,10 @@ export default function ImageEditorPage() {
 
         const [processedImages, aiResult] = await Promise.all([
           processImage(file, dimensions),
-          getAiGeneratedContent(await fileToDataURI(file)),
+          getAiGeneratedContent(
+            await fileToDataURI(file),
+            values.productDescription
+          ),
         ]);
 
         if (!aiResult.success) {
@@ -184,6 +190,23 @@ export default function ImageEditorPage() {
                       </div>
                     )}
                   </div>
+                   <FormField
+                    control={form.control}
+                    name="productDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Descrição da Peça (Opcional)</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Ex: Camiseta de algodão com estampa de folhagem, modelagem reta..."
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 <div className="space-y-6">
