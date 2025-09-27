@@ -34,10 +34,17 @@ export async function processImage(
 
       // Especial para a imagem ERP: fundo desfocado
       if (dim.name === 'erp') {
+        // Preenche o fundo com branco para evitar bordas escuras do desfoque
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, dim.width, dim.height);
+        
         // 1. Desenha a imagem de fundo esticada e desfocada
+        ctx.save();
         ctx.filter = 'blur(20px)';
-        ctx.drawImage(imageBitmap, 0, 0, dim.width, dim.height);
-        ctx.filter = 'none';
+        // Desenha a imagem um pouco maior que o canvas para evitar as bordas do desfoque
+        ctx.drawImage(imageBitmap, -10, -10, dim.width + 20, dim.height + 20);
+        ctx.restore();
+
 
         // 2. Calcula as dimensões para a imagem centralizada (fit)
         let renderWidth, renderHeight, x, y;
