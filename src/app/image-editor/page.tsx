@@ -2,12 +2,6 @@
 
 import type { GenerateProductDetailsOutput } from '@/ai/flows/generate-product-details';
 import { ProcessedImagesDisplay } from '@/components/processed-images-display';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -18,7 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
@@ -37,16 +30,6 @@ import * as z from 'zod';
 
 const formSchema = z.object({
   productDescription: z.string().optional(),
-  websiteWidth: z.coerce
-    .number()
-    .min(50, 'Mín 50px')
-    .max(4000, 'Máx 4000px'),
-  websiteHeight: z.coerce
-    .number()
-    .min(50, 'Mín 50px')
-    .max(4000, 'Máx 4000px'),
-  erpWidth: z.coerce.number().min(50, 'Mín 50px').max(4000, 'Máx 4000px'),
-  erpHeight: z.coerce.number().min(50, 'Mín 50px').max(4000, 'Máx 4000px'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -65,10 +48,6 @@ export default function ImageEditorPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       productDescription: '',
-      websiteWidth: 1080,
-      websiteHeight: 1080,
-      erpWidth: 400,
-      erpHeight: 400,
     },
   });
 
@@ -106,10 +85,10 @@ export default function ImageEditorPage() {
         const dimensions: Dimension[] = [
           {
             name: 'site',
-            width: values.websiteWidth,
-            height: values.websiteHeight,
+            width: 1300,
+            height: 2000,
           },
-          { name: 'erp', width: values.erpWidth, height: values.erpHeight },
+          { name: 'erp', width: 500, height: 500 },
         ];
 
         const [processedImages, aiResult] = await Promise.all([
@@ -209,78 +188,19 @@ export default function ImageEditorPage() {
                   />
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-6 flex flex-col justify-between h-full">
                   <div>
                     <Label className="font-medium">Dimensões de Saída</Label>
-                    <Accordion
-                      type="single"
-                      collapsible
-                      defaultValue="website"
-                      className="w-full"
-                    >
-                      <AccordionItem value="website">
-                        <AccordionTrigger>Imagem para o Site</AccordionTrigger>
-                        <AccordionContent className="grid grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="websiteWidth"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Largura (px)</FormLabel>
-                                <FormControl>
-                                  <Input type="number" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="websiteHeight"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Altura (px)</FormLabel>
-                                <FormControl>
-                                  <Input type="number" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </AccordionContent>
-                      </AccordionItem>
-                      <AccordionItem value="erp">
-                        <AccordionTrigger>Imagem para o ERP</AccordionTrigger>
-                        <AccordionContent className="grid grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="erpWidth"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Largura (px)</FormLabel>
-                                <FormControl>
-                                  <Input type="number" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="erpHeight"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Altura (px)</FormLabel>
-                                <FormControl>
-                                  <Input type="number" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
+                    <div className="space-y-2 mt-2">
+                       <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
+                        <span className="font-medium text-sm">Imagem para o Site</span>
+                        <span className="text-sm text-muted-foreground">1300 x 2000 px</span>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
+                         <span className="font-medium text-sm">Imagem para o ERP</span>
+                         <span className="text-sm text-muted-foreground">500 x 500 px</span>
+                      </div>
+                    </div>
                   </div>
 
                   <Button
