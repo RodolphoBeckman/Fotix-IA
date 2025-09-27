@@ -15,6 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { formatBytes } from '@/lib/utils';
 import {
+  ArrowLeft,
   Check,
   Clipboard,
   Download,
@@ -28,17 +29,27 @@ import { useState } from 'react';
 interface ProcessedImagesDisplayProps {
   processedImages: ProcessedImage[];
   aiContent: GenerateProductDetailsOutput;
+  onReset: () => void;
 }
 
 export function ProcessedImagesDisplay({
   processedImages,
   aiContent,
+  onReset,
 }: ProcessedImagesDisplayProps) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+    <>
+    <div className='flex items-center mb-4'>
+        <Button variant="outline" onClick={onReset}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Gerar Novas Imagens
+        </Button>
+    </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <ProcessedImagesSection images={processedImages} />
       <AiContentSection content={aiContent} />
     </div>
+    </>
   );
 }
 

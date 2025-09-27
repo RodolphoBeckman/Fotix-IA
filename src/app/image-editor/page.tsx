@@ -3,7 +3,6 @@
 import type { GenerateProductDetailsOutput } from '@/ai/flows/generate-product-details';
 import { ProcessedImagesDisplay } from '@/components/processed-images-display';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -12,7 +11,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { fileToDataURI, getAiGeneratedContent } from '@/lib/actions';
@@ -22,7 +20,7 @@ import {
   type ProcessedImage,
 } from '@/lib/image-processor';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Sparkles, UploadCloud } from 'lucide-react';
+import { Camera, Loader2, Sparkles, UploadCloud } from 'lucide-react';
 import Image from 'next/image';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
@@ -120,28 +118,38 @@ export default function ImageEditorPage() {
     });
   };
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="font-headline text-4xl md:text-5xl font-bold">
-            Kit de Ferramentas de Imagem e Conteúdo
-          </h2>
-          <p className="text-muted-foreground mt-2 text-lg">
-            Envie a imagem do seu produto e deixe nossa IA cuidar do resto.
-          </p>
-        </div>
+  const handleReset = () => {
+    setFile(null);
+    setFilePreview(null);
+    setResults(null);
+    form.reset();
+  };
 
-        <Card className="mb-8">
-          <CardContent className="p-6">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start"
-              >
-                <div className="space-y-4">
-                  <Label htmlFor="file-upload" className="font-medium">Imagem do Produto</Label>
-                  <div className="relative border-2 border-dashed border-muted-foreground/50 rounded-lg p-6 text-center cursor-pointer hover:border-primary transition-colors">
+  if (results) {
+    return (
+       <div className="container mx-auto px-4 py-8">
+        <ProcessedImagesDisplay {...results} onReset={handleReset} />
+       </div>
+    );
+  }
+
+  return (
+    <div className="flex-1 flex flex-col justify-center items-center p-4">
+      <div className="w-full max-w-2xl mx-auto text-center">
+        <div className="flex items-center justify-center gap-3 mb-4">
+            <Camera className="h-10 w-10 text-primary" />
+             <h1 className="font-headline text-5xl font-semibold text-foreground">
+              Fotix
+            </h1>
+        </div>
+        <p className="text-muted-foreground text-lg mb-8">
+            Crie conteúdo de alta qualidade para o seu e-commerce com o poder da IA.
+        </p>
+
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                 <div className="space-y-4">
+                  <div className="relative border-2 border-dashed border-muted-foreground/30 rounded-lg p-10 text-center cursor-pointer hover:border-primary transition-colors bg-input/20">
                     <input
                       id="file-upload"
                       type="file"
@@ -151,7 +159,7 @@ export default function ImageEditorPage() {
                       disabled={isProcessing}
                     />
                     {filePreview ? (
-                      <div className="relative aspect-square max-h-[300px] mx-auto">
+                      <div className="relative aspect-video max-h-[250px] mx-auto">
                         <Image
                           src={filePreview}
                           alt="Pré-visualização"
@@ -160,12 +168,18 @@ export default function ImageEditorPage() {
                         />
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground">
-                        <UploadCloud className="w-12 h-12" />
-                        <p className="font-medium">
-                          Clique ou arraste o arquivo para esta área para enviar
-                        </p>
-                        <p className="text-sm">PNG, JPG, GIF até 10MB</p>
+                      <div className="flex flex-col items-center justify-center space-y-4 text-muted-foreground">
+                        <div className="p-3 rounded-full bg-primary/10 text-primary">
+                          <UploadCloud className="w-10 h-10" />
+                        </div>
+                        <div>
+                            <p className="font-medium">
+                            Arraste, cole, ou <span className="text-primary">clique para escanear</span>
+                            </p>
+                            <p className="text-sm">
+                            Suporta: JPG, PNG, WEBP até 10MB
+                            </p>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -174,12 +188,12 @@ export default function ImageEditorPage() {
                     name="productDescription"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Descrição da Peça (Opcional)</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Ex: Camiseta de algodão com estampa de folhagem, modelagem reta..."
-                            className="resize-none"
+                            placeholder="Opcional: Descreva a peça para refinar os resultados da IA (Ex: Camiseta de algodão com estampa de folhagem...)"
+                            className="resize-none text-center bg-input/20"
                             {...field}
+                             disabled={!file || isProcessing}
                           />
                         </FormControl>
                         <FormMessage />
@@ -187,25 +201,9 @@ export default function ImageEditorPage() {
                     )}
                   />
                 </div>
-
-                <div className="space-y-6 flex flex-col justify-between h-full">
-                  <div>
-                    <Label className="font-medium">Dimensões de Saída</Label>
-                    <div className="space-y-2 mt-2">
-                       <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
-                        <span className="font-medium text-sm">Imagem para o Site</span>
-                        <span className="text-sm text-muted-foreground">1300 x 2000 px</span>
-                      </div>
-                      <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
-                         <span className="font-medium text-sm">Imagem para o ERP</span>
-                         <span className="text-sm text-muted-foreground">500 x 500 px</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button
+                 <Button
                     type="submit"
-                    className="w-full"
+                    className="w-full max-w-sm mx-auto"
                     size="lg"
                     disabled={isProcessing || !file}
                   >
@@ -216,22 +214,8 @@ export default function ImageEditorPage() {
                     )}
                     {isProcessing ? 'Processando...' : 'Gerar com IA'}
                   </Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-
-        {isProcessing && (
-          <div className="text-center py-10">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
-            <p className="mt-4 text-muted-foreground">
-              A IA está fazendo sua mágica... por favor, aguarde.
-            </p>
-          </div>
-        )}
-
-        {results && <ProcessedImagesDisplay {...results} />}
+            </form>
+        </Form>
       </div>
     </div>
   );
