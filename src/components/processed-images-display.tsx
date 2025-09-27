@@ -27,18 +27,13 @@ import { useState } from 'react';
 
 interface ProcessedImagesDisplayProps {
   processedImages: ProcessedImage[];
-  aiContent: GenerateProductDetailsOutput;
 }
 
 export function ProcessedImagesDisplay({
-  processedImages,
-  aiContent,
+  processedImages
 }: ProcessedImagesDisplayProps) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
       <ProcessedImagesSection images={processedImages} />
-      <AiContentSection content={aiContent} />
-    </div>
   );
 }
 
@@ -143,6 +138,9 @@ function AiContentSection({
     </Card>
   );
 }
+
+ProcessedImagesDisplay.AiContentSection = AiContentSection;
+
 
 function CopyableContent({
   title,
