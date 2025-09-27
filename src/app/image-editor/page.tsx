@@ -20,7 +20,7 @@ import {
   type ProcessedImage,
 } from '@/lib/image-processor';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Camera, Loader2, Sparkles, UploadCloud, X } from 'lucide-react';
+import { ArrowLeft, Camera, Loader2, Sparkles, UploadCloud, X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
