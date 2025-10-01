@@ -21,7 +21,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl">
             <AppCard
               href="/image-editor"
-              title="Editor de Imagens"
+              title="Fotix"
               description="Redimensione, edite e gere conteúdo de marketing para suas fotos de produto."
               icon={<FotixLogo className="w-8 h-8" />}
             />
