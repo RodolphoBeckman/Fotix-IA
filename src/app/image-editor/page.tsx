@@ -398,12 +398,7 @@ export default function ImageEditorPage() {
   return (
     <div className="flex-1 flex flex-col justify-center items-center p-4" onPaste={handlePaste}>
       <div className="w-full max-w-2xl mx-auto text-center">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <FotixLogo className="h-12 w-12" />
-          <h1 className="font-headline text-5xl font-semibold text-foreground">
-            Fotix
-          </h1>
-        </div>
+        
         <p className="text-muted-foreground text-lg mb-8">
             Crie conteúdo de alta qualidade para o seu e-commerce com o poder da IA.
         </p>

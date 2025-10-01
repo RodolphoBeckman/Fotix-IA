@@ -3,6 +3,7 @@
 import { Toaster } from '@/components/ui/toaster';
 import { useEffect } from 'react';
 import './globals.css';
+import { ThemeProvider } from '@/components/theme-provider';
 
 export default function RootLayout({
   children,
@@ -39,16 +40,23 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased bg-background relative">
-        <div 
-          className="pointer-events-none fixed inset-0 z-0 transition-all duration-500" 
-          style={{
-            background: 'radial-gradient(600px at var(--x) var(--y), rgba(140, 100, 255, 0.15), transparent 80%)'
-          }}
-        />
-        <div className="relative z-10">
-          {children}
-          <Toaster />
-        </div>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+            <div 
+              className="pointer-events-none fixed inset-0 z-0 transition-all duration-500" 
+              style={{
+                background: 'radial-gradient(600px at var(--x) var(--y), rgba(140, 100, 255, 0.15), transparent 80%)'
+              }}
+            />
+            <div className="relative z-10">
+              {children}
+              <Toaster />
+            </div>
+        </ThemeProvider>
       </body>
     </html>
   );
