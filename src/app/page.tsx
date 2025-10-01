@@ -1,7 +1,6 @@
 
 import { AppCard } from '@/components/app-card';
 import { FotixLogo } from '@/components/fotix-logo';
-import { Image } from 'lucide-react';
 
 export default function DashboardPage() {
   return (
@@ -24,7 +23,7 @@ export default function DashboardPage() {
               href="/image-editor"
               title="Editor de Imagens"
               description="Redimensione, edite e gere conteúdo de marketing para suas fotos de produto."
-              icon={<Image className="w-8 h-8" />}
+              icon={<FotixLogo className="w-8 h-8" />}
             />
           </div>
         </div>
