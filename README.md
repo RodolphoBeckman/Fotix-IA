@@ -11,43 +11,45 @@ Antes de começar, certifique-se de que você tem o seguinte software instalado 
 - [Node.js](https://nodejs.org/) (versão 20.x ou superior recomendada)
 - [npm](https://www.npmjs.com/) (geralmente vem com o Node.js) ou [yarn](https://yarnpkg.com/)
 
-## Configuração do Ambiente
+## Instalação e Execução Local
 
 1.  **Clone o repositório** para sua máquina local.
 
-2.  **Crie um arquivo de ambiente**: Na raiz do projeto, crie um arquivo chamado `.env` (ou `.env.local`).
-
-3.  **Adicione a Chave de API**: Dentro do arquivo `.env`, adicione sua chave de API do Google AI Studio (Gemini). O arquivo deve ter o seguinte conteúdo:
-
-    ```
-    GEMINI_API_KEY=SUA_CHAVE_DE_API_AQUI
+2.  **Instale as dependências**:
+    ```bash
+    npm install
     ```
 
-    Substitua `SUA_CHAVE_DE_API_AQUI` pela sua chave real.
+3.  **Configure as Variáveis de Ambiente (Local)**:
+    - Crie um arquivo chamado `.env` na raiz do projeto.
+    - Adicione sua chave de API do Google AI Studio (Gemini):
+      ```
+      GEMINI_API_KEY=SUA_CHAVE_DE_API_AQUI
+      ```
 
-## Instalação
+4.  **Inicie os servidores de desenvolvimento**:
+    - Em um terminal, inicie o aplicativo Next.js:
+      ```bash
+      npm run dev
+      ```
+    - Em outro terminal, inicie o Genkit para as funcionalidades de IA:
+      ```bash
+      npm run genkit:watch
+      ```
 
-Navegue até a pasta do projeto no seu terminal e execute o seguinte comando para instalar todas as dependências necessárias:
+O aplicativo estará disponível em `http://localhost:9002`.
 
-```bash
-npm install
-```
+## Deploy na Vercel
 
-## Execução
+Para publicar seu aplicativo na Vercel, siga estes passos:
 
-Para iniciar o servidor de desenvolvimento local, execute o comando:
+1.  **Conecte seu repositório**: No painel da Vercel, importe o projeto a partir do seu repositório Git.
 
-```bash
-npm run dev
-```
+2.  **Configure as Variáveis de Ambiente**: Na Vercel, vá para as configurações do seu projeto (**Settings > Environment Variables**) e adicione a seguinte variável:
 
-O aplicativo estará disponível em `http://localhost:9002` (ou outra porta, se a 9002 estiver em uso).
+    - **`GEMINI_API_KEY`**: Cole a mesma chave de API do Google AI Studio que você usa localmente.
 
-O sistema Genkit (para a funcionalidade de IA) também precisa ser iniciado em um terminal separado:
-
-```bash
-npm run genkit:watch
-```
+A Vercel cuidará do resto, detectando que é um projeto Next.js e realizando o build e o deploy automaticamente.
 
 ## Estrutura de Arquivos Principal
 
@@ -66,3 +68,4 @@ npm run genkit:watch
   - **`utils.ts`**: Funções utilitárias gerais (como `cn` para classes e `formatBytes`).
 - **`public/`**: Arquivos estáticos, como imagens e logos.
 - **`package.json`**: Lista as dependências e scripts do projeto.
+- **`vercel.json`**: Configuração específica para o deploy na Vercel.
