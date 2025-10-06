@@ -27,9 +27,3 @@ export async function getAiGeneratedContent(
     };
   }
 }
-
-export async function fileToDataURI(file: File): Promise<string> {
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  return `data:${file.type};base64,${buffer.toString('base64')}`;
-}

@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { fileToDataURI, getAiGeneratedContent } from '@/lib/actions';
+import { getAiGeneratedContent } from '@/lib/actions';
 import {
   processImage,
   type Dimension,
@@ -38,7 +38,6 @@ import Image from 'next/image';
 import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { FotixLogo } from '@/components/fotix-logo';
 
 const formSchema = z.object({
   productDescription: z.string().optional(),
@@ -52,6 +51,23 @@ type Result = {
   processedImages: ProcessedImage[];
   aiContent: GenerateProductDetailsOutput | null;
 };
+
+async function fileToDataURI(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            if (typeof reader.result === 'string') {
+                resolve(reader.result);
+            } else {
+                reject(new Error('Falha ao ler o arquivo como Data URI'));
+            }
+        };
+        reader.onerror = (error) => {
+            reject(error);
+        };
+        reader.readAsDataURL(file);
+    });
+}
 
 
 export default function ImageEditorPage() {
