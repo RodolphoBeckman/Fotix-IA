@@ -50,12 +50,7 @@ Se uma descrição for fornecida, use-a como a principal fonte de verdade. A ima
 Imagem do Produto: {{media url=productPhotoDataUri}}
 {{#if productDescription}}
 Descrição Fornecida: {{{productDescription}}}
-{{/if}}
-
-Gere o conteúdo no seguinte formato:
-Título:
-Descrição:
-Tags de SEO:`,
+{{/if}}`,
 });
 
 
