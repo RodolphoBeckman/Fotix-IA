@@ -37,23 +37,6 @@ export async function generateProductDetails(
   return generateProductDetailsFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'generateProductDetailsPrompt',
-  input: {schema: GenerateProductDetailsInputSchema},
-  output: {schema: GenerateProductDetailsOutputSchema},
-  prompt: `Você é um assistente de IA especialista em criar conteúdo para e-commerce de moda.
-
-Com base na imagem do produto e na descrição fornecida, gere um título, uma descrição de marketing atraente e uma lista de tags de SEO.
-
-Se uma descrição for fornecida, use-a como a principal fonte de verdade. A imagem deve servir como contexto visual.
-
-Imagem do Produto: {{media url=productPhotoDataUri}}
-{{#if productDescription}}
-Descrição Fornecida: {{{productDescription}}}
-{{/if}}`,
-});
-
-
 const generateProductDetailsFlow = ai.defineFlow(
   {
     name: 'generateProductDetailsFlow',
@@ -61,6 +44,23 @@ const generateProductDetailsFlow = ai.defineFlow(
     outputSchema: GenerateProductDetailsOutputSchema,
   },
   async input => {
+    let basePrompt = `Você é um assistente de IA especialista em criar conteúdo para e-commerce de moda.
+
+Com base na imagem do produto e na descrição fornecida, gere um título, uma descrição de marketing atraente e uma lista de tags de SEO.
+
+A imagem deve servir como contexto visual.`;
+
+    if (input.productDescription) {
+      basePrompt += `\n\nUse a descrição fornecida como a principal fonte de verdade:\nDescrição Fornecida: ${input.productDescription}`;
+    }
+
+    const prompt = ai.definePrompt({
+      name: 'generateProductDetailsPrompt',
+      input: {schema: GenerateProductDetailsInputSchema},
+      output: {schema: GenerateProductDetailsOutputSchema},
+      prompt: `${basePrompt}\n\nImagem do Produto: {{media url=productPhotoDataUri}}`,
+    });
+    
     const {output} = await prompt(input);
     return output!;
   }
